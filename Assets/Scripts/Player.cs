@@ -38,7 +38,7 @@ public class Player : MovingObject {
 
     private void updateFoodText()
     {
-        foodText.text = "Food: " + food;
+        foodText.text = "Health: " + food;
     }
 
     private void onDisable()
@@ -48,6 +48,7 @@ public class Player : MovingObject {
 	
 	// Update is called once per frame
 	void Update () {
+        this.health = this.food;
         if (!GameManager.instance.playersTurn)
             return;
 
@@ -61,7 +62,34 @@ public class Player : MovingObject {
             vertical = 0;
 
         if ((horizontal + vertical) != 0)
-            AttemptMove<Wall>(horizontal, vertical);
+        {
+          //AttemptMove<Wall>(horizontal, vertical);
+            // Casteamos un rayo para ver el tipo de elemento que tenemos en la dirección en la que queremos movernos
+            RaycastHit2D hit;
+
+            // Puntos de inicio y fin del rayo
+            Vector2 start = transform.position;
+            Vector2 end = start + new Vector2(horizontal, vertical);
+
+            // Desactivamos el collider del jugador
+            boxCollider.enabled = false;
+            // Lanzamos el rayo
+            hit = Physics2D.Linecast(start, end,this.blockingLayer);
+            // Acitvamos el collider del jugador
+            boxCollider.enabled = true;
+
+
+            if(hit.transform != null)
+            {
+                Debug.Log("colision: " + hit.collider.tag);
+                if(hit.collider.tag == "Wall")
+                    AttemptMove<Wall>(horizontal, vertical);
+                else if(hit.collider.tag == "Enemy")
+                    AttemptMove<Enemy>(horizontal, vertical);
+            }
+            else
+                AttemptMove<Wall>(horizontal, vertical);
+        }
 	}
 
     protected override void AttemptMove<T>(int xDir, int yDir)
@@ -95,7 +123,7 @@ public class Player : MovingObject {
 
             SoundManager.instance.RandomizeSfx(moveSound1, moveSound2);
         }
-            
+
 
         checkIfGameOver();
 
@@ -104,10 +132,22 @@ public class Player : MovingObject {
 
     protected override void OnCantMove<T>(T component)
     {
-        Wall hitWall = component as Wall;
+        if( typeof(T) == typeof(Wall))
+        {
+            Wall hitWall = (Wall) (object) component;
 
-        hitWall.damageWall(wallDamage);
-        animator.SetTrigger("playerChop");
+            hitWall.damageWall(wallDamage);
+            animator.SetTrigger("playerChop");
+        }
+        if( typeof(T) == typeof(Enemy))
+        {
+            Enemy hitEnemy = (Enemy) (object) component;
+
+            hitEnemy.TakeDamage(damage);
+            animator.SetTrigger("playerChop");
+         
+        }
+        
     }
 
     private void OnTriggerEnter2D (Collider2D other)
@@ -120,14 +160,14 @@ public class Player : MovingObject {
         else if (other.tag == "Food")
         {
             this.food += this.pointsPerFood;
-            foodText.text = "+" + pointsPerFood + " Food: " + food;
+            foodText.text = "+" + pointsPerFood + " Health: " + food;
             SoundManager.instance.RandomizeSfx(eatSound1, eatSound2);
             other.gameObject.SetActive(false);
         }
         else if (other.tag == "Soda")
         {
             this.food += this.pointsPerSoda;
-            foodText.text = "+" + pointsPerSoda + " Food: " + food;
+            foodText.text = "+" + pointsPerSoda + " Health: " + food;
             SoundManager.instance.RandomizeSfx(drinkSound1, drinkSound2);
             other.gameObject.SetActive(false);
         }
@@ -143,7 +183,7 @@ public class Player : MovingObject {
     {
         animator.SetTrigger("playerHit");
         this.food -= loss;
-        foodText.text = "-" + loss + " Food: " + food;
+        foodText.text = "-" + loss + " Health: " + food;
         checkIfGameOver();
     }
 

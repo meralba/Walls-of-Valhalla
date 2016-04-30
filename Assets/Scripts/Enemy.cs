@@ -63,4 +63,18 @@ public class Enemy : MovingObject {
 
         //throw new NotImplementedException();
     }
+
+    public override void TakeDamage(int damage)
+    {
+        base.TakeDamage(damage);
+        animator.SetTrigger("enemyHit");
+    }
+
+    protected override void Update()
+    {
+        if(health<=0)
+            animator.SetTrigger("enemyDeath");
+        base.Update();
+
+    }
 }

@@ -6,11 +6,12 @@ public abstract class MovingObject : MonoBehaviour {
     public float moveTime = 0.1f;
     public LayerMask blockingLayer;
     public int maxHealth=100;
+    public int damage = 0;
 
-    private BoxCollider2D boxCollider;
+    protected BoxCollider2D boxCollider;
     private Rigidbody2D rb2D;
     private float inverseMoveTime;
-    private int health;
+    protected int health;
     
 
 	// Use this for initialization
@@ -24,9 +25,17 @@ public abstract class MovingObject : MonoBehaviour {
     protected virtual void Update()
     {
         if (health <= 0)
-            Destroy(gameObject);
+        {
+          // StartCoroutine( animationDeath());
+            Destroy(gameObject, 5);
+        }
     }
 
+    IEnumerator animationDeath()
+    {
+        yield return new WaitForSeconds(2);
+        Destroy(gameObject);
+    }
     // Echarle un vistazo a qué es IEnumeratork
     protected IEnumerator SmoothMovement(Vector3 end)
     {
@@ -42,6 +51,11 @@ public abstract class MovingObject : MonoBehaviour {
             // Esto hace que esperemos un frame para volver a ejecutar el ciclo while
             yield return null;
         }
+    }
+
+    public virtual void TakeDamage(int damage)
+    {
+        this.health-=damage;
     }
 
     protected bool Move ( int xDir, int yDir, out RaycastHit2D hit)

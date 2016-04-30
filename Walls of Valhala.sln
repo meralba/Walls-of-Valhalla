@@ -1,0 +1,23 @@
+Microsoft Visual Studio Solution File, Format Version 11.00
+# Visual Studio 2008
+
+Project("{134BB740-DBF7-EEB2-E8A4-85D37EB0742D}") = "Walls of Valhala", "Assembly-CSharp.csproj", "{1566745B-070A-7917-B0D6-E4B44110F7FF}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{1566745B-070A-7917-B0D6-E4B44110F7FF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{1566745B-070A-7917-B0D6-E4B44110F7FF}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{1566745B-070A-7917-B0D6-E4B44110F7FF}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{1566745B-070A-7917-B0D6-E4B44110F7FF}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(MonoDevelopProperties) = preSolution
+		StartupItem = Assembly-CSharp.csproj
+	EndGlobalSection
+EndGlobal

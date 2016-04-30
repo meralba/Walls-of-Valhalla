@@ -59,7 +59,7 @@ using UnityEngine.UI;
 
         levelImage = GameObject.Find("LevelImage");
         levelText = GameObject.Find("LevelText").GetComponent<Text>();
-        levelText.text = "Day " + level;
+        levelText.text = "Level " + level;
         levelImage.SetActive(true);
         Invoke("HideLevelImage", levelStartDelay);
 
@@ -106,12 +106,16 @@ using UnityEngine.UI;
         if(enemies.Count == 0)
             yield return new WaitForSeconds(this.turnDelay);
 
-        for(int i=0; i < enemies.Count; i++)
+        for (int i = 0; i < enemies.Count; i++)
         {
-            enemies[i].MoveEnemy();
+            if (enemies[i] != null)
+            {
+                enemies[i].MoveEnemy();
+            }
             yield return new WaitForSeconds(this.turnDelay);
-        }
 
+           
+        }
         playersTurn = true;
         enemiesMoving = false;
     }
