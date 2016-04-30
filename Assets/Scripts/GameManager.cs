@@ -1,19 +1,21 @@
 ﻿using UnityEngine;
-using System.Collections;
-using UnityEngine.UI;
+
+using System.Collections;       //Allows us to use Lists. 
 using System.Collections.Generic;
 
-public class GameManager : MonoBehaviour
-{
-    // Hacemos la clase un singleton
-    public static GameManager instance = null;
+using UnityEngine.UI;
+
+    public class GameManager : MonoBehaviour
+    {
+        // Hacemos la clase un singleton
+        public static GameManager instance = null;
 
     public float turnDelay = 0.1f;
     public float levelStartDelay = 2f;
 
-    private BoardManager boardScript;                       //Store a reference to our BoardManager which will set up the level.
+        private BoardManager boardScript;                       //Store a reference to our BoardManager which will set up the level.
 
-    public int playerHP = 100;
+        public int playerFoodPoints = 100;
     [HideInInspector]
     public bool playersTurn = true;
 
@@ -25,23 +27,23 @@ public class GameManager : MonoBehaviour
     private bool enemiesMoving;
     private bool doingSetup;
 
-    //Awake is always called before any Start functions
-    void Awake()
-    {
-        if (instance == null)
-            instance = this;
-        else if (instance != this)
-            Destroy(gameObject);
+        //Awake is always called before any Start functions
+        void Awake()
+        {
+            if (instance == null)
+                instance = this;
+            else if (instance != this)
+                Destroy(gameObject);
 
-        DontDestroyOnLoad(gameObject);
-        //Get a component reference to the attached BoardManager script
-        boardScript = GetComponent<BoardManager>();
+            DontDestroyOnLoad(gameObject);
+            //Get a component reference to the attached BoardManager script
+            boardScript = GetComponent<BoardManager>();
 
         this.enemies = new List<Enemy>();
 
-        //Call the InitGame function to initialize the first level 
-        InitGame();
-    }
+            //Call the InitGame function to initialize the first level 
+            InitGame();
+        }
 
     private void OnLevelWasLoaded(int index)
     {
@@ -50,9 +52,9 @@ public class GameManager : MonoBehaviour
         InitGame();
     }
 
-    //Initializes the game for each level.
-    void InitGame()
-    {
+        //Initializes the game for each level.
+        void InitGame()
+        {
         doingSetup = true;
 
         levelImage = GameObject.Find("LevelImage");
@@ -65,8 +67,8 @@ public class GameManager : MonoBehaviour
         //Call the SetupScene function of the BoardManager script, pass it current level number.
         boardScript.SetupScene(level);
 
-
-    }
+            
+        }
 
     private void HideLevelImage()
     {
@@ -75,7 +77,7 @@ public class GameManager : MonoBehaviour
         doingSetup = false;
     }
 
-    public void GameOver()
+        public void GameOver()
     {
         levelText.text = "After " + level + " days, you starved.";
         levelImage.SetActive(true);
@@ -101,10 +103,10 @@ public class GameManager : MonoBehaviour
         enemiesMoving = true;
         yield return new WaitForSeconds(this.turnDelay);
 
-        if (enemies.Count == 0)
+        if(enemies.Count == 0)
             yield return new WaitForSeconds(this.turnDelay);
 
-        for (int i = 0; i < enemies.Count; i++)
+        for(int i=0; i < enemies.Count; i++)
         {
             enemies[i].MoveEnemy();
             yield return new WaitForSeconds(this.turnDelay);
@@ -113,4 +115,4 @@ public class GameManager : MonoBehaviour
         playersTurn = true;
         enemiesMoving = false;
     }
-}
+    }
