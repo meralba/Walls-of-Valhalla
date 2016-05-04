@@ -8,7 +8,7 @@ public class Player : MovingObject {
 
     public int wallDamage = 1, pointsPerFood = 20, pointsPerSoda = 20, currentOrientation = 1, lastOrientation = 1;
     public float restartLevelDelay = 1f;
-    public Text foodText;
+    public Text healthText;
 
     public AudioClip moveSound1;
     public AudioClip moveSound2;
@@ -18,38 +18,29 @@ public class Player : MovingObject {
     public AudioClip drinkSound2;
     public AudioClip gameOverSound;
 
-
-
-    private Animator animator;
-    private int food;
-
-
-
     // Use this for initialization
     protected override void Start () {
-        animator = GetComponent<Animator>();
-
-        food = GameManager.instance.playerFoodPoints;
-
-        updateFoodText();
-
         base.Start();
-	}
 
-    private void updateFoodText()
-    {
-        foodText.text = "Health: " + food;
+        animator = GetComponent<Animator>();
+        health = GameManager.instance.playerHealth;
+        updateHealthText();
     }
 
-    private void onDisable()
+    private void updateHealthText()
     {
-        GameManager.instance.playerFoodPoints = this.food;
+        healthText.text = "Health: " + health;
+    }
+
+    private void OnDisable()
+    {
+        GameManager.instance.playerHealth = this.health;
     }
 	
 	// Update is called once per frame
 	void Update () {
-        this.health = this.food;
-        if (!GameManager.instance.playersTurn)
+        //this.health = this.health;
+        if (!GameManager.instance.playersTurn || GameManager.instance.controlDisabled)
             return;
 
         int horizontal = 0, vertical = 0;
@@ -81,7 +72,6 @@ public class Player : MovingObject {
 
             if(hit.transform != null)
             {
-                Debug.Log("colision: " + hit.collider.tag);
                 if(hit.collider.tag == "Wall")
                     AttemptMove<Wall>(horizontal, vertical);
                 else if(hit.collider.tag == "Enemy")
@@ -94,8 +84,8 @@ public class Player : MovingObject {
 
     protected override void AttemptMove<T>(int xDir, int yDir)
     {
-        this.food--;
-        updateFoodText();
+        this.health--;
+        updateHealthText();
 
         base.AttemptMove<T>(xDir, yDir);
 
@@ -116,9 +106,6 @@ public class Player : MovingObject {
 
             diffOrientation = lastOrientation - currentOrientation;
 
-            // Codigo para rotar
-            //gameObject.transform.Rotate(new Vector3(0, 0, 90* diffOrientation));
-
             lastOrientation = currentOrientation;
 
             SoundManager.instance.RandomizeSfx(moveSound1, moveSound2);
@@ -137,15 +124,18 @@ public class Player : MovingObject {
             Wall hitWall = (Wall) (object) component;
 
             hitWall.damageWall(wallDamage);
-            animator.SetTrigger("playerChop");
+            //animator.SetTrigger("playerChop");
+            StartCoroutine(PlayAnimation("playerChop"));
         }
         if( typeof(T) == typeof(Enemy))
         {
             Enemy hitEnemy = (Enemy) (object) component;
 
             hitEnemy.TakeDamage(damage);
-            animator.SetTrigger("playerChop");
-         
+            Debug.Log("Atakandoooo");
+            //animator.SetTrigger("playerChop");
+            StartCoroutine(PlayAnimation("playerChop"));
+
         }
         
     }
@@ -159,15 +149,15 @@ public class Player : MovingObject {
         }
         else if (other.tag == "Food")
         {
-            this.food += this.pointsPerFood;
-            foodText.text = "+" + pointsPerFood + " Health: " + food;
+            this.health += this.pointsPerFood;
+            healthText.text = "+" + pointsPerFood + " Health: " + health;
             SoundManager.instance.RandomizeSfx(eatSound1, eatSound2);
             other.gameObject.SetActive(false);
         }
         else if (other.tag == "Soda")
         {
-            this.food += this.pointsPerSoda;
-            foodText.text = "+" + pointsPerSoda + " Health: " + food;
+            this.health += this.pointsPerSoda;
+            healthText.text = "+" + pointsPerSoda + " Health: " + health;
             SoundManager.instance.RandomizeSfx(drinkSound1, drinkSound2);
             other.gameObject.SetActive(false);
         }
@@ -179,17 +169,18 @@ public class Player : MovingObject {
         Application.LoadLevel(Application.loadedLevel);
     }
 
-    public void LoseFood(int loss)
+    public void LoseHealth(int loss)
     {
-        animator.SetTrigger("playerHit");
-        this.food -= loss;
-        foodText.text = "-" + loss + " Health: " + food;
+        //animator.SetTrigger("playerHit");
+        StartCoroutine(PlayAnimation("playerHit"));
+        this.health -= loss;
+        healthText.text = "-" + loss + " Health: " + health;
         checkIfGameOver();
     }
 
     private void checkIfGameOver()
     {
-        if (food <= 0)
+        if (health <= 0)
         {
             // Ponemos el sonido de fin de juego y paramos la música
             SoundManager.instance.PlaySingle(gameOverSound);

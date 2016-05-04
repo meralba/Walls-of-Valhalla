@@ -8,14 +8,18 @@ public abstract class MovingObject : MonoBehaviour {
     public int maxHealth=100;
     public int damage = 0;
 
+    protected int health;
     protected BoxCollider2D boxCollider;
+    protected Animator animator;
+
     private Rigidbody2D rb2D;
     private float inverseMoveTime;
-    protected int health;
     
 
-	// Use this for initialization
-	protected virtual void Start () {
+
+
+    // Use this for initialization
+    protected virtual void Start () {
         this.boxCollider = GetComponent<BoxCollider2D>();
         this.rb2D = GetComponent<Rigidbody2D>();
         this.inverseMoveTime = 1f / this.moveTime;
@@ -25,17 +29,9 @@ public abstract class MovingObject : MonoBehaviour {
     protected virtual void Update()
     {
         if (health <= 0)
-        {
-          // StartCoroutine( animationDeath());
-            Destroy(gameObject, 5);
-        }
+            Destroy(gameObject);
     }
 
-    IEnumerator animationDeath()
-    {
-        yield return new WaitForSeconds(2);
-        Destroy(gameObject);
-    }
     // Echarle un vistazo a qué es IEnumeratork
     protected IEnumerator SmoothMovement(Vector3 end)
     {
@@ -94,5 +90,27 @@ public abstract class MovingObject : MonoBehaviour {
     protected abstract void OnCantMove<T>(T component)
         where T : Component;
 
+
+    protected virtual IEnumerator PlayAnimation(string trigger)
+    {
+        //Debug.Log("Control disabled");
+        // Disable controls
+        GameManager.instance.controlDisabled = true;
+
+        
+        // Play animation
+        this.animator.SetTrigger(trigger);
+
+        yield return new WaitForSeconds(1f);
+
+
+        Debug.Log("Control enabled");
+        // Re-enable controls
+        GameManager.instance.controlDisabled = false;
+
+        // Call the object's destruction if need be. I guess this call would be considered a bad practise?
+        if (health <= 0)
+            Destroy(gameObject);
+    }
 
 }

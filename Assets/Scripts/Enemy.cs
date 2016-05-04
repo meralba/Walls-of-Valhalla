@@ -6,7 +6,6 @@ public class Enemy : MovingObject {
 
     public int playerDamage;
 
-    private Animator animator;
     private Transform target;
     private bool skipMove;
 
@@ -15,12 +14,12 @@ public class Enemy : MovingObject {
 
     // Use this for initialization
     protected override void Start () {
+        base.Start();
         animator = GetComponent<Animator>();
 
         GameManager.instance.AddEnemyToList(this);
 
         target = GameObject.FindGameObjectWithTag("Player").transform;
-        base.Start();
 	}
 	
     protected override void AttemptMove<T>(int xDir, int yDir)
@@ -56,10 +55,11 @@ public class Enemy : MovingObject {
     {
         Player hitPlayer = component as Player;
 
-        animator.SetTrigger("enemyAttack");
+        //animator.SetTrigger("enemyAttack");
+        StartCoroutine(PlayAnimation("enemyAttack"));
         SoundManager.instance.RandomizeSfx(enemyAttack1, enemyAttack2);
 
-        hitPlayer.LoseFood(this.playerDamage);
+        hitPlayer.LoseHealth(this.playerDamage);
 
         //throw new NotImplementedException();
     }
@@ -67,14 +67,15 @@ public class Enemy : MovingObject {
     public override void TakeDamage(int damage)
     {
         base.TakeDamage(damage);
-        animator.SetTrigger("enemyHit");
+        //animator.SetTrigger("enemyHit");
+        if (health <= 0)
+            StartCoroutine(PlayAnimation("enemyDeath"));
+        else
+            StartCoroutine(PlayAnimation("enemyHit"));
     }
 
     protected override void Update()
     {
-        if(health<=0)
-            animator.SetTrigger("enemyDeath");
-        base.Update();
 
     }
 }

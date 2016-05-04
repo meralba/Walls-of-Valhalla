@@ -12,14 +12,15 @@ using UnityEngine.UI;
 
     public float turnDelay = 0.1f;
     public float levelStartDelay = 2f;
+    public bool controlDisabled = true;
 
-        private BoardManager boardScript;                       //Store a reference to our BoardManager which will set up the level.
+    private BoardManager boardScript;                       //Store a reference to our BoardManager which will set up the level.
 
-        public int playerFoodPoints = 100;
+    public int playerHealth = 100;
     [HideInInspector]
     public bool playersTurn = true;
 
-    private int level = 1;                                  //Current level number, expressed in game as "Day 1".
+    private int level = 1;                                  //Current level number
     private GameObject levelImage;
     private Text levelText;
     // Lista de enemigos
@@ -55,6 +56,7 @@ using UnityEngine.UI;
         //Initializes the game for each level.
         void InitGame()
         {
+        controlDisabled = true;
         doingSetup = true;
 
         levelImage = GameObject.Find("LevelImage");
@@ -75,6 +77,7 @@ using UnityEngine.UI;
         levelImage.SetActive(false);
 
         doingSetup = false;
+        controlDisabled = false;
     }
 
         public void GameOver()
