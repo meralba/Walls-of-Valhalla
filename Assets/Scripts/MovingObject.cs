@@ -101,7 +101,7 @@ public abstract class MovingObject : MonoBehaviour {
         // Play animation
         this.animator.SetTrigger(trigger);
 
-        yield return new WaitForSeconds(1f);
+        yield return new WaitForSeconds(1.5f);
 
 
         Debug.Log("Control enabled");

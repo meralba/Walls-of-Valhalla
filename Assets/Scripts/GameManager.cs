@@ -49,7 +49,7 @@ using UnityEngine.UI;
     private void OnLevelWasLoaded(int index)
     {
         level++;
-
+       // turnDelay = 0.1f / level;
         InitGame();
     }
 
@@ -82,7 +82,7 @@ using UnityEngine.UI;
 
         public void GameOver()
     {
-        levelText.text = "After " + level + " days, you starved.";
+        levelText.text = "After " + level + " levels, you die.";
         levelImage.SetActive(true);
         enabled = false;
     }
