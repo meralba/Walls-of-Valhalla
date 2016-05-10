@@ -6,7 +6,7 @@ using UnityEngine.UI;
 
 public class Player : MovingObject {
 
-    public int wallDamage = 1, pointsPerFood = 20, pointsPerSoda = 20, currentOrientation = 1, lastOrientation = 1;
+    public int wallDamage = 1, pointsPerFood = 20, pointsPerSoda = 20;
     public float restartLevelDelay = 1f;
     public Text healthText;
 
@@ -38,8 +38,8 @@ public class Player : MovingObject {
     }
 	
 	// Update is called once per frame
-	void Update () {
-        //this.health = this.health;
+	protected override void Update () {
+
         if (!GameManager.instance.playersTurn || GameManager.instance.controlDisabled)
             return;
 
@@ -91,30 +91,13 @@ public class Player : MovingObject {
 
         RaycastHit2D hit;
         if(Move(xDir,yDir,out hit))
-        {
-            // Actualizamos la orientación actual
-            if (xDir == 1)
-                currentOrientation = 1;
-            else if (xDir == -1)
-                currentOrientation = 3;
-            else if (yDir == 1)
-                currentOrientation = 0;
-            else if (yDir == -1)
-                currentOrientation = 2;
-
-            int diffOrientation;
-
-            diffOrientation = lastOrientation - currentOrientation;
-
-            lastOrientation = currentOrientation;
-
             SoundManager.instance.RandomizeSfx(moveSound1, moveSound2);
-        }
 
 
         checkIfGameOver();
 
         GameManager.instance.playersTurn = false;
+
     }
 
     protected override void OnCantMove<T>(T component)

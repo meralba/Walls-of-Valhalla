@@ -113,4 +113,17 @@ public abstract class MovingObject : MonoBehaviour {
             Destroy(gameObject);
     }
 
+    public Node getPositionNode()
+    {
+        Node node = null;
+        int posX, posY;
+
+        posX = Mathf.FloorToInt(this.transform.position.x);
+        posY = Mathf.FloorToInt(this.transform.position.y);
+
+        node = GameManager.instance.nodeGrid.GetNode(posX, posY);
+
+        return node;
+    }
+
 }

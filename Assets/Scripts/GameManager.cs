@@ -14,6 +14,10 @@ using UnityEngine.UI;
     public float levelStartDelay = 2f;
     public bool controlDisabled = true;
 
+    public LayerMask blockingLayer;                         // Layer containing blocking objects
+
+    public GridMap nodeGrid = null;
+
     private BoardManager boardScript;                       //Store a reference to our BoardManager which will set up the level.
 
     public int playerHealth = 100;
@@ -28,23 +32,26 @@ using UnityEngine.UI;
     private bool enemiesMoving;
     private bool doingSetup;
 
-        //Awake is always called before any Start functions
-        void Awake()
-        {
-            if (instance == null)
-                instance = this;
-            else if (instance != this)
-                Destroy(gameObject);
+    //Awake is always called before any Start functions
+    void Awake()
+    {
+        if (instance == null)
+            instance = this;
+        else if (instance != this)
+            Destroy(gameObject);
 
-            DontDestroyOnLoad(gameObject);
-            //Get a component reference to the attached BoardManager script
-            boardScript = GetComponent<BoardManager>();
+        DontDestroyOnLoad(gameObject);
+        //Get a component reference to the attached BoardManager script
+        boardScript = GetComponent<BoardManager>();
 
         this.enemies = new List<Enemy>();
 
-            //Call the InitGame function to initialize the first level 
-            InitGame();
-        }
+        // -1 and 22 because it has 2 
+        nodeGrid = new GridMap(-1, -1, 22, 22, 1, blockingLayer);
+
+        //Call the InitGame function to initialize the first level 
+        InitGame();
+    }
 
     private void OnLevelWasLoaded(int index)
     {
@@ -80,7 +87,7 @@ using UnityEngine.UI;
         controlDisabled = false;
     }
 
-        public void GameOver()
+    public void GameOver()
     {
         levelText.text = "After " + level + " levels, you die.";
         levelImage.SetActive(true);
@@ -122,4 +129,4 @@ using UnityEngine.UI;
         playersTurn = true;
         enemiesMoving = false;
     }
-    }
+}
