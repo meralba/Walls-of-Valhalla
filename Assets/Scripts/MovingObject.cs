@@ -116,12 +116,8 @@ public abstract class MovingObject : MonoBehaviour {
     public Node getPositionNode()
     {
         Node node = null;
-        int posX, posY;
-
-        posX = Mathf.FloorToInt(this.transform.position.x);
-        posY = Mathf.FloorToInt(this.transform.position.y);
-
-        node = GameManager.instance.nodeGrid.GetNode(posX, posY);
+        
+        node = GameManager.instance.pathFinder.gridMap.GetNode(this.transform);
 
         return node;
     }

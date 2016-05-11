@@ -13,7 +13,7 @@ public class GridMap {
 
     public Node[ , ] grid;
 
-    public Vector2 startNodePosition, targetNodePosition;
+    private Pathfinder pathFinder;
 
     /*
      * Params
@@ -80,17 +80,33 @@ public class GridMap {
         }
     }
 
+
+    // Accessors to the nodes.
     public Node GetNode(int x, int y)
     {
         Node node = null;
 
+        // Transpose the position according to the initial x and y values provided while creating the class
+        x -= initX;
+        y -= initY;
+
+        // Check the values are within the limits provided. Since we substracted the initial values, we can check the lower limit using 0
         if(x >= 0 && x < maxX && y >= 0 && y < maxY )
-        {
             node = grid[x, y];
-        }
 
         return node;
     }
 
+    public Node GetNode(Transform t)
+    {
+        int x = Mathf.FloorToInt(t.position.x);
+        int y = Mathf.FloorToInt(t.position.x);
 
+        return GetNode(x, y);
+    }
+
+    public Node GetNode(GameObject go)
+    {
+        return GetNode(go.transform);
+    }
 }

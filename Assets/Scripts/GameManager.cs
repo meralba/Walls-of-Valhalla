@@ -16,7 +16,8 @@ using UnityEngine.UI;
 
     public LayerMask blockingLayer;                         // Layer containing blocking objects
 
-    public GridMap nodeGrid = null;
+    //public GridMap nodeGrid = null;
+    public Pathfinder pathFinder = null;
 
     private BoardManager boardScript;                       //Store a reference to our BoardManager which will set up the level.
 
@@ -47,7 +48,12 @@ using UnityEngine.UI;
         this.enemies = new List<Enemy>();
 
         // -1 and 22 because it has 2 
-        nodeGrid = new GridMap(-1, -1, 22, 22, 1, blockingLayer);
+        //nodeGrid = new GridMap(-1, -1, 22, 22, 1, blockingLayer);
+
+        //Attention;
+        // Initialise the GridMap within the pathFinder if this design approach is finally taken
+        pathFinder = new Pathfinder(new GridMap(-1, -1, 22, 22, 1, blockingLayer));
+
 
         //Call the InitGame function to initialize the first level 
         InitGame();

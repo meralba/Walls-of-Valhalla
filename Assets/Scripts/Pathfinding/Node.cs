@@ -15,7 +15,21 @@ public class Node {
         }
     }
 
-    public Node ParentNode;
+    public Node parentNode;
     public bool isWalkable = true;
-   
+
+    public static float GetDistance(Node n1, Node n2)
+    {
+        Vector2 difference = new Vector2(n2.x - n1.x, n2.y - n1.y);
+
+        return difference.magnitude;
+    }
+
+    // Here we can change the heuristic function value of a node.
+    // Let's start off with euclidean distance
+    public static float GetHCost(Node n, Node target)
+    {
+        return GetDistance(n, target);
+    }
+
 }
