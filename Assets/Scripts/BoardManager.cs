@@ -61,6 +61,23 @@ using Random = UnityEngine.Random;      //Tells Random to use the Unity Engine r
             boardHolder = new GameObject("Board").transform;
 
             int x, y;
+            int lowerLimit, upperLimit;
+        
+
+            /*
+            int width, slice;
+
+            width = floorTiles.Length / GameManager.instance.stages;
+            slice = GameManager.instance.level / GameManager.instance.levelsPerStage;
+
+            lowerLimit = width * slice;
+            upperLimit = lowerLimit + width;
+            */
+
+            lowerLimit = (floorTiles.Length / GameManager.instance.stages) * ((GameManager.instance.level / GameManager.instance.levelsPerStage) % GameManager.instance.levelsPerStage);
+
+            upperLimit = lowerLimit + (floorTiles.Length / GameManager.instance.stages);
+
 
             for (x = -1; x < columns + 1; x++)
             {
@@ -72,7 +89,7 @@ using Random = UnityEngine.Random;      //Tells Random to use the Unity Engine r
                     if (x == -1 || x == columns || y == -1 || y == rows)
                         toInstantiate = outerWallTiles[Random.Range(0, outerWallTiles.Length)];
                     else
-                        toInstantiate = floorTiles[Random.Range(0, floorTiles.Length)];
+                        toInstantiate = floorTiles[Random.Range(lowerLimit, upperLimit)];
 
                     GameObject instance =
                             Instantiate(toInstantiate, new Vector3(x, y, 0f), Quaternion.identity) as GameObject;
@@ -137,7 +154,7 @@ using Random = UnityEngine.Random;      //Tells Random to use the Unity Engine r
             LayoutObjectAtRandom(foodTiles, foodCount.minimum, foodCount.maximum);
 
             //Determine number of enemies based on current level number, based on a logarithmic progression
-            int enemyCount = level % 5 + 1;
+            int enemyCount = level / 2 + 1 ;
 
             //Instantiate a random number of enemies based on minimum and maximum, at randomized positions.
             LayoutObjectAtRandom(enemyTiles, enemyCount, enemyCount);

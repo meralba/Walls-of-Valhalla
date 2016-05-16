@@ -7,6 +7,10 @@ using UnityEngine.UI;
 
     public class GameManager : MonoBehaviour
     {
+    // ShowExploration 2
+    // Use this to show the explored nodes in A*
+    // Other comments here and in Pathfinder.cs
+    public GameObject marker;
         // Hacemos la clase un singleton
         public static GameManager instance = null;
 
@@ -25,7 +29,10 @@ using UnityEngine.UI;
     [HideInInspector]
     public bool playersTurn = true;
 
-    private int level = 1;                                  //Current level number
+    public int level = 1;                                  //Current level number
+    public int levelsPerStage = 2;
+    public int stages = 2;
+
     private GameObject levelImage;
     private Text levelText;
     // Lista de enemigos
@@ -52,8 +59,7 @@ using UnityEngine.UI;
 
         //Attention;
         // Initialise the GridMap within the pathFinder if this design approach is finally taken
-        pathFinder = new Pathfinder(new GridMap(-1, -1, 22, 22, 1, blockingLayer));
-
+        
 
         //Call the InitGame function to initialize the first level 
         InitGame();
@@ -71,6 +77,11 @@ using UnityEngine.UI;
         {
         controlDisabled = true;
         doingSetup = true;
+
+        pathFinder = new Pathfinder(new GridMap(-1, -1, 22, 22, 1, blockingLayer));
+        // ShowExploration 2
+        // Change this to show the explored nodes in A*
+        // pathFinder.marker = this.marker;
 
         levelImage = GameObject.Find("LevelImage");
         levelText = GameObject.Find("LevelText").GetComponent<Text>();
@@ -117,10 +128,9 @@ using UnityEngine.UI;
     IEnumerator MoveEnemies()
     {
         enemiesMoving = true;
+        controlDisabled = true;
         yield return new WaitForSeconds(this.turnDelay);
-
-        if(enemies.Count == 0)
-            yield return new WaitForSeconds(this.turnDelay);
+        
 
         for (int i = 0; i < enemies.Count; i++)
         {
@@ -128,11 +138,12 @@ using UnityEngine.UI;
             {
                 enemies[i].MoveEnemy();
             }
-            yield return new WaitForSeconds(this.turnDelay);
+            yield return new WaitForSeconds(this.turnDelay / 2f);
 
            
         }
         playersTurn = true;
         enemiesMoving = false;
+        controlDisabled = false;
     }
 }

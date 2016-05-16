@@ -2,12 +2,16 @@
 using System.Collections;
 using System.Collections.Generic;
 
-public class Pathfinder {
+// ShowExploration 3
+// Use this to show the explored nodes in A*
+public class Pathfinder /* : MonoBehaviour */ {
 
     public GridMap gridMap;
 
     private Node startingNode, targetNode;
     private List<Node> foundPath;
+
+    public GameObject marker;
 
     public Pathfinder()
     {
@@ -23,36 +27,39 @@ public class Pathfinder {
         targetNode = null;
         foundPath = null;
 
+        gridMap = sourceGrid;
         UpdateGrid();
     }
 
     public List<Node> FindPath(Node start, Node target)
     {
+        // Update the members with the given parameters
+        targetNode = target;
+        startingNode = start;
+
         // Current found path
         foundPath = new List<Node>();
 
-        // Open/CLosed set
+        // Open/Closed set
         List<Node> openSet = new List<Node>();
         //We need to make value existence checks, a hashed set is O(1) for those operations
         HashSet<Node> closedSet = new HashSet<Node>();
 
-        openSet.Add(start);
+        Node currentNode = null;
+
+        openSet.Add(startingNode);
 
 
         // The efficiency of this section can be improved if need be. Substitute the closed list with a stack
         while(openSet.Count > 0)
         {
-            Node currentNode = openSet[0];
+            currentNode = openSet[0];
 
             // For each node in the open set
             for(int i=0; i<openSet.Count; i++)
             {
                 // If the cost of an open node is less than the current node's, explore that node
-                if(openSet[i].fCost < currentNode.fCost
-                    ||
-                        (openSet[i].fCost == currentNode.fCost 
-                        && 
-                        openSet[i].hCost < currentNode.hCost))
+                if(openSet[i].fCost < currentNode.fCost)
                 {
                     if(!currentNode.Equals(openSet[i]))
                     {
@@ -64,6 +71,10 @@ public class Pathfinder {
             openSet.Remove(currentNode);
             closedSet.Add(currentNode);
 
+            // ShowExploration 4
+            // Use this to show the explored nodes in A*
+            // Instantiate(marker, new Vector3(currentNode.x, currentNode.y, 0f), Quaternion.identity);
+
             // Another possible improvement point
             if (currentNode.Equals(targetNode))
             {
@@ -72,15 +83,17 @@ public class Pathfinder {
                 break;
             }
 
+
+           
             foreach(Node neighbour in GetNeighbours(currentNode))
             {
-                if(!closedSet.Contains(neighbour))
+                if (!closedSet.Contains(neighbour))
                 {
                     // Uppdate the gCost calling the GetDistance static method from gridmap
                     float newGCost = currentNode.gCost + Node.GetDistance(currentNode, neighbour);
 
                     // If the new cost is lower or the open set doesnt have this neighbour (unexpanded node)
-                    if(newGCost < neighbour.gCost || !openSet.Contains(neighbour))
+                    if ((newGCost < neighbour.gCost) || !openSet.Contains(neighbour))
                     {
                         // Calculate new values for the g and h costs
                         neighbour.gCost = newGCost;
@@ -88,15 +101,18 @@ public class Pathfinder {
                         // Set the current node as its parent
                         neighbour.parentNode = currentNode;
                         // Add the neighbour to the open set to explore if it hasn't already
-                        if(!openSet.Contains(neighbour))
+                        if (!openSet.Contains(neighbour))
                         {
                             openSet.Add(neighbour);
                         }
                     }
 
-                }
+                }                    
             }
         }
+        
+        if (foundPath.Count == 0)
+            foundPath = null;
 
         return foundPath;
     }
@@ -109,8 +125,10 @@ public class Pathfinder {
 
         Node currentNode = endNode;
 
+
         // Iterate through the parents chain (which at this point are the best parents for each node, since the A* must be finished by the call) from the end node to the start node
-        while (currentNode != endNode)
+
+        while (currentNode != startNode)
         {
             path.Add(currentNode);
             currentNode = currentNode.parentNode;
@@ -118,7 +136,6 @@ public class Pathfinder {
 
         // Reverse the path's order (we want it from start to end)
         path.Reverse();
-
 
         return path;
     }

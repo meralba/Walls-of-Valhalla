@@ -6,7 +6,7 @@ using UnityEngine.UI;
 
 public class Player : MovingObject {
 
-    public int wallDamage = 1, pointsPerFood = 20, pointsPerSoda = 20;
+    public int wallDamage = 1, pointsPerHealthPack = 20, pointsPerSoda = 20;
     public float restartLevelDelay = 1f;
     public Text healthText;
 
@@ -115,8 +115,7 @@ public class Player : MovingObject {
             Enemy hitEnemy = (Enemy) (object) component;
 
             hitEnemy.TakeDamage(damage);
-            Debug.Log("Atakandoooo");
-            //animator.SetTrigger("playerChop");
+
             StartCoroutine(PlayAnimation("playerChop"));
 
         }
@@ -130,18 +129,11 @@ public class Player : MovingObject {
             Invoke("Restart", restartLevelDelay);
             enabled=false;
         }
-        else if (other.tag == "Food")
+        else if (other.tag == "Health")
         {
-            this.health += this.pointsPerFood;
-            healthText.text = "+" + pointsPerFood + " Health: " + health;
+            this.health += this.pointsPerHealthPack;
+            healthText.text = "+" + pointsPerHealthPack + " Health: " + health;
             SoundManager.instance.RandomizeSfx(eatSound1, eatSound2);
-            other.gameObject.SetActive(false);
-        }
-        else if (other.tag == "Soda")
-        {
-            this.health += this.pointsPerSoda;
-            healthText.text = "+" + pointsPerSoda + " Health: " + health;
-            SoundManager.instance.RandomizeSfx(drinkSound1, drinkSound2);
             other.gameObject.SetActive(false);
         }
     }

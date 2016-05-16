@@ -1,7 +1,10 @@
 # TODO
 
-Library/
 
+Library
+
+Temp
 
 *.sln
 *.csproj
+*.suo

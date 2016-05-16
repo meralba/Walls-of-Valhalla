@@ -15,8 +15,8 @@ public abstract class MovingObject : MonoBehaviour {
     private Rigidbody2D rb2D;
     private float inverseMoveTime;
 
-    private static int animationsPlaying=0;
-    private static Object lockVar;
+    private int animationsPlaying=0;
+    private static Object lockVar = new Object();
     
 
 
@@ -107,7 +107,7 @@ public abstract class MovingObject : MonoBehaviour {
             this.animator.SetTrigger(trigger);
         }
         // Wait for the animation
-        yield return new WaitForSeconds(1.5f);
+        yield return new WaitForSeconds(1f);
 
         // Edit the number of animations playing (which may substitute the Gamemanager's controlDisabled variable)
         lock (lockVar)

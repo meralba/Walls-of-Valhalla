@@ -5,7 +5,7 @@ public class Node {
 
     public int x, y;
 
-    public float hCost, gCost;
+    public float hCost=0, gCost=0;
 
     public float fCost
     {
@@ -13,6 +13,14 @@ public class Node {
         {
             return gCost+hCost;
         }
+    }
+
+    public bool Equals(Node other)
+    {
+        if (other == null || (this.x != other.x) || (this.y != other.y))
+            return false;
+        else
+            return true;
     }
 
     public Node parentNode;

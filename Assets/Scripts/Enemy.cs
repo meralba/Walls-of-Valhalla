@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using System.Collections;
+using System.Collections.Generic;
 using System;
 
 public class Enemy : MovingObject {
@@ -39,14 +40,43 @@ public class Enemy : MovingObject {
     public void MoveEnemy()
     {
         int xDir = 0, yDir = 0;
+        /* Old enemy behaviour
+         * 
 
-        // Comprueba si está en la columna del jugador
-        if (Mathf.Abs(target.position.x - transform.position.x) < float.Epsilon)
+       if (Mathf.Abs(target.position.x - transform.position.x) < float.Epsilon)
             // Nos movemos hacia la dirección vertical donde esté el jugador
             yDir = target.position.y > transform.position.y ? 1 : -1;
         // Si no, estará en la fila, y hacemos lo mismo para la dirección horizontal
         else
             xDir = target.position.x > transform.position.x ? 1 : -1;
+            */
+
+
+        Node currentNode, nextNode, targetNode;
+        List<Node> path;
+
+        currentNode = GameManager.instance.pathFinder.gridMap.GetNode(transform);
+        targetNode = GameManager.instance.pathFinder.gridMap.GetNode(target);
+
+
+        GameManager.instance.pathFinder.UpdateGrid();
+
+        path = GameManager.instance.pathFinder.FindPath(currentNode, targetNode);
+
+        if (path != null)
+        {
+            nextNode = path[0];
+
+            xDir = nextNode.x - currentNode.x;
+            if (xDir != 0)
+                xDir /= Math.Abs(xDir);
+            yDir = nextNode.y - currentNode.y;
+            if (yDir != 0)
+                yDir /= Math.Abs(yDir);
+        }
+
+
+        Node n = GameManager.instance.pathFinder.gridMap.GetNode(transform);
 
         AttemptMove<Player>(xDir, yDir);
     }
@@ -69,7 +99,10 @@ public class Enemy : MovingObject {
         base.TakeDamage(damage);
         //animator.SetTrigger("enemyHit");
         if (health <= 0)
+        {
             StartCoroutine(PlayAnimation("enemyDeath"));
+        }
+            
         else
             StartCoroutine(PlayAnimation("enemyHit"));
     }
