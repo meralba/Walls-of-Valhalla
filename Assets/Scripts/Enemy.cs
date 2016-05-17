@@ -5,8 +5,6 @@ using System;
 
 public class Enemy : MovingObject {
 
-    public int playerDamage;
-
     private Transform target;
     private bool skipMove;
 
@@ -39,6 +37,8 @@ public class Enemy : MovingObject {
 
     public void MoveEnemy()
     {
+        if (health <= 0)
+            return;
         int xDir = 0, yDir = 0;
         /* Old enemy behaviour
          * 
@@ -89,7 +89,7 @@ public class Enemy : MovingObject {
         StartCoroutine(PlayAnimation("enemyAttack"));
         SoundManager.instance.RandomizeSfx(enemyAttack1, enemyAttack2);
 
-        hitPlayer.LoseHealth(this.playerDamage);
+        hitPlayer.LoseHealth(this.damage);
 
         //throw new NotImplementedException();
     }

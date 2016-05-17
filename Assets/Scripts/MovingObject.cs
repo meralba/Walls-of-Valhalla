@@ -3,7 +3,7 @@ using System.Collections;
 
 public abstract class MovingObject : MonoBehaviour {
 
-    public float moveTime = 0.1f;
+    public float moveTime = 0.2f;
     public LayerMask blockingLayer;
     public int maxHealth=100;
     public int damage = 0;
@@ -101,29 +101,32 @@ public abstract class MovingObject : MonoBehaviour {
         GameManager.instance.controlDisabled = true;
 
         lock (lockVar)
-        {
             animationsPlaying++;
-            // Play animation
-            this.animator.SetTrigger(trigger);
+
+        // Play animation
+        this.animator.SetTrigger(trigger);
+
+        if(health <=0)
+        {
+            gameObject.tag = "Untagged";
+            Destroy(gameObject, 1.5f);
         }
         // Wait for the animation
-        yield return new WaitForSeconds(1f);
+        else
+            yield return new WaitForSeconds(1.5f);
+
+        
 
         // Edit the number of animations playing (which may substitute the Gamemanager's controlDisabled variable)
         lock (lockVar)
         {
             animationsPlaying--;
 
-            if(animationsPlaying == 0)
-            {
-                // Re-enable controls and check hp
+            // Re-enable controls
+            if (animationsPlaying == 0)
                 GameManager.instance.controlDisabled = false;
-                // Call the object's destruction if need be. I guess this call would be considered a bad practise?
-                if (health <= 0)
-                    Destroy(gameObject);
-            }
         }
-        }
+    }
         
 
     public Node getPositionNode()

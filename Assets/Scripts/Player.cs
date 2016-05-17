@@ -14,8 +14,8 @@ public class Player : MovingObject {
     public AudioClip moveSound2;
     public AudioClip eatSound1;
     public AudioClip eatSound2;
-    public AudioClip drinkSound1;
-    public AudioClip drinkSound2;
+    public AudioClip attackSound;
+
     public AudioClip gameOverSound;
 
     // Use this for initialization
@@ -117,7 +117,7 @@ public class Player : MovingObject {
             hitEnemy.TakeDamage(damage);
 
             StartCoroutine(PlayAnimation("playerChop"));
-
+            SoundManager.instance.RandomizeSfx(attackSound);
         }
         
     }

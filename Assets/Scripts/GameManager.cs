@@ -14,7 +14,7 @@ using UnityEngine.UI;
         // Hacemos la clase un singleton
         public static GameManager instance = null;
 
-    public float turnDelay = 0.1f;
+    public float turnDelay = 0.2f;
     public float levelStartDelay = 2f;
     public bool controlDisabled = true;
 
@@ -138,7 +138,7 @@ using UnityEngine.UI;
             {
                 enemies[i].MoveEnemy();
             }
-            yield return new WaitForSeconds(this.turnDelay / 2f);
+            yield return new WaitForSeconds(this.turnDelay);
 
            
         }

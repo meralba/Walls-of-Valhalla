@@ -123,6 +123,9 @@ using Random = UnityEngine.Random;      //Tells Random to use the Unity Engine r
             //Choose a random number of objects to instantiate within the minimum and maximum limits
             int objectCount = Random.Range(minimum, maximum + 1);
 
+            int lowerLimit, upperLimit;
+
+
             //Instantiate objects until the randomly chosen limit objectCount is reached
             for (int i = 0; i < objectCount; i++)
             {
@@ -130,7 +133,11 @@ using Random = UnityEngine.Random;      //Tells Random to use the Unity Engine r
                 Vector3 randomPosition = RandomPosition();
 
                 //Choose a random tile from tileArray and assign it to tileChoice
-                GameObject tileChoice = tileArray[Random.Range(0, tileArray.Length)];
+
+                lowerLimit = (tileArray.Length / GameManager.instance.stages) * ((GameManager.instance.level / GameManager.instance.levelsPerStage) % GameManager.instance.levelsPerStage);
+                upperLimit = lowerLimit + (tileArray.Length / GameManager.instance.stages);
+
+                GameObject tileChoice = tileArray[Random.Range(lowerLimit, upperLimit)];
 
                 //Instantiate tileChoice at the position returned by RandomPosition with no change in rotation
                 Instantiate(tileChoice, randomPosition, Quaternion.identity);
