@@ -26,6 +26,7 @@ using Random = UnityEngine.Random;      //Tells Random to use the Unity Engine r
         public int rows = 20;                                            //Number of rows in our game board.
         public Count wallCount = new Count(5, 9);                      //Lower and upper limit for our random number of walls per level.
         public Count foodCount = new Count(1, 5);                      //Lower and upper limit for our random number of food items per level.
+        public GameObject player;
         public GameObject exit;                                         //Prefab to spawn for exit.
         public GameObject[] floorTiles;                                 //Array of floor prefabs.
         public GameObject[] wallTiles;                                  //Array of wall prefabs.
@@ -33,7 +34,7 @@ using Random = UnityEngine.Random;      //Tells Random to use the Unity Engine r
         public GameObject[] enemyTiles;                                 //Array of enemy prefabs.
         public GameObject[] outerWallTiles;                             //Array of outer tile prefabs.
 
-        private Transform boardHolder;                                  //A variable to store a reference to the transform of our Board object.
+        private GameObject board;                                  //A variable to store a reference to the transform of our Board object.
         private List<Vector3> gridPositions = new List<Vector3>();   //A list of possible locations to place tiles.
 
 
@@ -58,43 +59,43 @@ using Random = UnityEngine.Random;      //Tells Random to use the Unity Engine r
 
         void boardSetup()
         {
-            boardHolder = new GameObject("Board").transform;
+            if (board != null)
+                Destroy(board);
+
+                
+            board = new GameObject("Board");
 
             int x, y;
-            int lowerLimit, upperLimit;
-        
-
-            /*
-            int width, slice;
-
-            width = floorTiles.Length / GameManager.instance.stages;
-            slice = GameManager.instance.level / GameManager.instance.levelsPerStage;
-
-            lowerLimit = width * slice;
-            upperLimit = lowerLimit + width;
-            */
-
-            lowerLimit = (floorTiles.Length / GameManager.instance.stages) * ((GameManager.instance.level / GameManager.instance.levelsPerStage) % GameManager.instance.levelsPerStage);
-
-            upperLimit = lowerLimit + (floorTiles.Length / GameManager.instance.stages);
+            int floorLowerLimit, floorUpperLimit;
+            int extWLowerLimit, extUpperLimit;
 
 
-            for (x = -1; x < columns + 1; x++)
+        /*
+        int width, slice;
+
+        width = floorTiles.Length / GameManager.instance.stages;
+        slice = GameManager.instance.level / GameManager.instance.levelsPerStage;
+
+        lowerLimit = width * slice;
+        upperLimit = lowerLimit + width;
+        */
+
+        floorLowerLimit = (floorTiles.Length / GameManager.instance.stages) * ((GameManager.instance.level / GameManager.instance.levelsPerStage) % GameManager.instance.levelsPerStage);
+        floorUpperLimit = floorLowerLimit + (floorTiles.Length / GameManager.instance.stages);
+
+        extWLowerLimit = (outerWallTiles.Length / GameManager.instance.stages) * ((GameManager.instance.level / GameManager.instance.levelsPerStage) % GameManager.instance.levelsPerStage);
+        extUpperLimit = extWLowerLimit + (outerWallTiles.Length / GameManager.instance.stages);
+
+
+        for (x = -1; x < columns + 1; x++)
             {
                 for (y = -1; y < rows + 1; y++)
                 {
-                    GameObject toInstantiate;
-
-
+                    // Here, we instantiate a tile, in the x,y,0 coordinates, and set its parent to be the boardInstance
                     if (x == -1 || x == columns || y == -1 || y == rows)
-                        toInstantiate = outerWallTiles[Random.Range(0, outerWallTiles.Length)];
+                        (Instantiate(outerWallTiles[Random.Range(extWLowerLimit, extUpperLimit)], new Vector3(x, y, 0f), Quaternion.identity) as GameObject).transform.SetParent(board.transform);
                     else
-                        toInstantiate = floorTiles[Random.Range(lowerLimit, upperLimit)];
-
-                    GameObject instance =
-                            Instantiate(toInstantiate, new Vector3(x, y, 0f), Quaternion.identity) as GameObject;
-
-                    instance.transform.SetParent(boardHolder);
+                        (Instantiate(floorTiles[Random.Range(floorLowerLimit, floorUpperLimit)], new Vector3(x, y, 0f), Quaternion.identity) as GameObject).transform.SetParent(board.transform);
                 }
             }
         }
@@ -140,7 +141,7 @@ using Random = UnityEngine.Random;      //Tells Random to use the Unity Engine r
                 GameObject tileChoice = tileArray[Random.Range(lowerLimit, upperLimit)];
 
                 //Instantiate tileChoice at the position returned by RandomPosition with no change in rotation
-                Instantiate(tileChoice, randomPosition, Quaternion.identity);
+                (Instantiate(tileChoice, randomPosition, Quaternion.identity) as GameObject).transform.SetParent(board.transform);
             }
         }
 
@@ -167,6 +168,9 @@ using Random = UnityEngine.Random;      //Tells Random to use the Unity Engine r
             LayoutObjectAtRandom(enemyTiles, enemyCount, enemyCount);
 
             //Instantiate the exit tile in the upper right hand corner of our game board
-            Instantiate(exit, new Vector3(columns - 1, rows - 1, 0f), Quaternion.identity);
+            (Instantiate(exit, new Vector3(columns - 1, rows - 1, 0f), Quaternion.identity) as GameObject).transform.SetParent(board.transform);
+
+            //Instantiate the Player in the 0,0 position of the board (lower left corner)
+            (Instantiate(player, new Vector3(0, 0, 0f), Quaternion.identity) as GameObject).transform.SetParent(board.transform);
         }
     }

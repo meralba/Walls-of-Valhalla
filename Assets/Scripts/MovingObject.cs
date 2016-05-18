@@ -8,7 +8,7 @@ public abstract class MovingObject : MonoBehaviour {
     public int maxHealth=100;
     public int damage = 0;
 
-    protected int health;
+    public int health;
     protected BoxCollider2D boxCollider;
     protected Animator animator;
 

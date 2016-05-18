@@ -19,7 +19,6 @@ public class SoundManager : MonoBehaviour {
         else if (instance)
             Destroy(gameObject);
 
-        DontDestroyOnLoad(gameObject);
 	}
 
     public void PlaySingle ( AudioClip clip)

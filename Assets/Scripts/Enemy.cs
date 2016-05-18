@@ -5,7 +5,7 @@ using System;
 
 public class Enemy : MovingObject {
 
-    private Transform target;
+    public Transform target;
     private bool skipMove;
 
     public AudioClip enemyAttack1;
@@ -18,7 +18,7 @@ public class Enemy : MovingObject {
 
         GameManager.instance.AddEnemyToList(this);
 
-        target = GameObject.FindGameObjectWithTag("Player").transform;
+        target = null;
 	}
 	
     protected override void AttemptMove<T>(int xDir, int yDir)
@@ -40,22 +40,15 @@ public class Enemy : MovingObject {
         if (health <= 0)
             return;
         int xDir = 0, yDir = 0;
-        /* Old enemy behaviour
-         * 
-
-       if (Mathf.Abs(target.position.x - transform.position.x) < float.Epsilon)
-            // Nos movemos hacia la dirección vertical donde esté el jugador
-            yDir = target.position.y > transform.position.y ? 1 : -1;
-        // Si no, estará en la fila, y hacemos lo mismo para la dirección horizontal
-        else
-            xDir = target.position.x > transform.position.x ? 1 : -1;
-            */
-
 
         Node currentNode, nextNode, targetNode;
         List<Node> path;
 
         currentNode = GameManager.instance.pathFinder.gridMap.GetNode(transform);
+
+        if(target == null)
+            target = GameObject.FindGameObjectWithTag("Player").transform;
+
         targetNode = GameManager.instance.pathFinder.gridMap.GetNode(target);
 
 
@@ -76,7 +69,7 @@ public class Enemy : MovingObject {
         }
 
 
-        Node n = GameManager.instance.pathFinder.gridMap.GetNode(transform);
+        //Node n = GameManager.instance.pathFinder.gridMap.GetNode(transform);
 
         AttemptMove<Player>(xDir, yDir);
     }

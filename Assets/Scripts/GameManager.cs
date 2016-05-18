@@ -25,7 +25,8 @@ using UnityEngine.UI;
 
     private BoardManager boardScript;                       //Store a reference to our BoardManager which will set up the level.
 
-    public int playerHealth = 100;
+    public int maxPlayerHealth = 100;
+    public int playerHealth;
     [HideInInspector]
     public bool playersTurn = true;
 
@@ -33,12 +34,15 @@ using UnityEngine.UI;
     public int levelsPerStage = 2;
     public int stages = 2;
 
-    private GameObject levelImage;
-    private Text levelText;
+    public GameObject levelImage;
+    public Text levelText;
     // Lista de enemigos
-    private List<Enemy> enemies;
+    public List<Enemy> enemies;
     private bool enemiesMoving;
     private bool doingSetup;
+
+    public Camera Cam;
+    public GameObject mainCamera;
 
     //Awake is always called before any Start functions
     void Awake()
@@ -48,18 +52,20 @@ using UnityEngine.UI;
         else if (instance != this)
             Destroy(gameObject);
 
-        DontDestroyOnLoad(gameObject);
+
         //Get a component reference to the attached BoardManager script
         boardScript = GetComponent<BoardManager>();
 
         this.enemies = new List<Enemy>();
 
-        // -1 and 22 because it has 2 
-        //nodeGrid = new GridMap(-1, -1, 22, 22, 1, blockingLayer);
+        levelText = GameObject.Find("LevelText").GetComponent<Text>();
+        levelImage = GameObject.Find("LevelImage");
 
-        //Attention;
-        // Initialise the GridMap within the pathFinder if this design approach is finally taken
-        
+
+        // This seems stupid, but with the first sentence the camera's reference is null.
+        mainCamera = (Instantiate(Cam, new Vector3(5.5f, 5.5f, -1f), Quaternion.identity) as GameObject);
+        mainCamera = GameObject.FindGameObjectWithTag("MainCamera");
+
 
         //Call the InitGame function to initialize the first level 
         InitGame();
@@ -67,25 +73,30 @@ using UnityEngine.UI;
 
     private void OnLevelWasLoaded(int index)
     {
-        level++;
-       // turnDelay = 0.1f / level;
+        //level++;
+
         InitGame();
     }
 
         //Initializes the game for each level.
-        void InitGame()
-        {
+    void InitGame()
+    {
         controlDisabled = true;
         doingSetup = true;
+
+        
 
         pathFinder = new Pathfinder(new GridMap(-1, -1, 22, 22, 1, blockingLayer));
         // ShowExploration 2
         // Change this to show the explored nodes in A*
         // pathFinder.marker = this.marker;
 
-        levelImage = GameObject.Find("LevelImage");
-        levelText = GameObject.Find("LevelText").GetComponent<Text>();
+
+
+        //levelText = GameObject.Find("LevelText").GetComponent<Text>();
+
         levelText.text = "Level " + level;
+
         levelImage.SetActive(true);
         Invoke("HideLevelImage", levelStartDelay);
 
@@ -93,8 +104,14 @@ using UnityEngine.UI;
         //Call the SetupScene function of the BoardManager script, pass it current level number.
         boardScript.SetupScene(level);
 
-            
-        }
+        // Set the player's health
+        GameObject.FindGameObjectWithTag("Player").GetComponent<Player>().setHealth(this.playerHealth);
+
+        // Abstract this into the camera class
+        mainCamera.transform.SetParent(null);
+        mainCamera.GetComponent<Camera>().orthographicSize = 7;
+        mainCamera.transform.position = new Vector3(5.5f, 5.5f, -1f);
+    }
 
     private void HideLevelImage()
     {
@@ -104,20 +121,54 @@ using UnityEngine.UI;
         controlDisabled = false;
     }
 
-    public void GameOver()
+    public IEnumerator GameOver()
     {
         levelText.text = "After " + level + " levels, you die.";
         levelImage.SetActive(true);
-        enabled = false;
+        controlDisabled = true;
+        yield return new WaitForSeconds(2f);
+        Destroy(gameObject);
+
+        SceneManager.instance.LoadMenu();
+    }
+
+    public void NextLevel()
+    {
+        level++;
+        this.enemies = new List<Enemy>();
+
+        InitGame();
     }
 
     //Update is called every frame.
     void Update()
     {
+        if( Input.GetKeyDown("space") && !controlDisabled )
+            ToogleCamera();
+
         if (playersTurn || enemiesMoving || doingSetup)
             return;
 
         StartCoroutine(MoveEnemies());
+    }
+
+    public void ToogleCamera()
+    {
+        // This should be moved onto another script that handles cameras
+        if (mainCamera.transform.parent == null)
+        {
+            Transform player;
+            player = GameObject.FindGameObjectWithTag("Player").transform;
+            mainCamera.transform.position = new Vector3(player.position.x, player.position.y, -1f);
+            mainCamera.GetComponent<Camera>().orthographicSize = 4;
+            mainCamera.transform.SetParent(GameObject.FindGameObjectWithTag("Player").transform);
+        }
+        else
+        {
+            mainCamera.transform.SetParent(null);
+            mainCamera.GetComponent<Camera>().orthographicSize = 7;
+            mainCamera.transform.position = new Vector3(5.5f, 5.5f, -1f);
+        }
     }
 
     public void AddEnemyToList(Enemy script)

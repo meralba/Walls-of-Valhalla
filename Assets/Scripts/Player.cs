@@ -22,6 +22,7 @@ public class Player : MovingObject {
     protected override void Start () {
         base.Start();
 
+        healthText = GameObject.Find("HealthText").GetComponent<Text>();
         animator = GetComponent<Animator>();
         health = GameManager.instance.playerHealth;
         updateHealthText();
@@ -30,6 +31,11 @@ public class Player : MovingObject {
     private void updateHealthText()
     {
         healthText.text = "Health: " + health;
+    }
+
+    public void setHealth(int hp)
+    {
+        this.health = hp;
     }
 
     private void OnDisable()
@@ -126,8 +132,9 @@ public class Player : MovingObject {
     {
         if (other.tag == "Exit")
         {
+            GameManager.instance.controlDisabled = true;
+            GameManager.instance.mainCamera.transform.SetParent(null);
             Invoke("Restart", restartLevelDelay);
-            enabled=false;
         }
         else if (other.tag == "Health")
         {
@@ -140,8 +147,9 @@ public class Player : MovingObject {
 
     private void Restart()
     {
+        GameManager.instance.NextLevel();
         // Esto hace que se cargue un nuevo nivel (como se generan proceduralmente, no pasamos otro nivel, sino que llamamos al cargador del mismo)
-        Application.LoadLevel(Application.loadedLevel);
+        //Application.LoadLevel(Application.loadedLevel);
     }
 
     public void LoseHealth(int loss)
@@ -160,8 +168,7 @@ public class Player : MovingObject {
             // Ponemos el sonido de fin de juego y paramos la música
             SoundManager.instance.PlaySingle(gameOverSound);
             SoundManager.instance.musicSource.Stop();
-            GameManager.instance.GameOver();
-        }
-            
+            StartCoroutine(GameManager.instance.GameOver());
+        }      
     }
 }
