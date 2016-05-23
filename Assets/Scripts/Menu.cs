@@ -11,4 +11,14 @@ public class Menu : MonoBehaviour {
     {
         UnityEngine.Application.Quit();
     }
+
+    public void ExitToMenu()
+    {
+        GameManager.instance.GameOver();
+        SceneManager.instance.LoadMenu();
+        Time.timeScale = 1;
+        GameManager.instance.isPaused = false;
+        
+    }
+
 }

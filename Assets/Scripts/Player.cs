@@ -46,7 +46,7 @@ public class Player : MovingObject {
 	// Update is called once per frame
 	protected override void Update () {
 
-        if (!GameManager.instance.playersTurn || GameManager.instance.controlDisabled)
+        if (!GameManager.instance.playersTurn || GameManager.instance.controlDisabled || GameManager.instance.isPaused)
             return;
 
         int horizontal = 0, vertical = 0;

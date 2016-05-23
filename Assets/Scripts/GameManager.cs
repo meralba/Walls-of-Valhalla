@@ -43,6 +43,9 @@ using UnityEngine.UI;
 
     public Camera Cam;
     public GameObject mainCamera;
+    public bool isPaused=false;
+    public GameObject pauseMenu;
+    private GameObject menuInstance;
 
     //Awake is always called before any Start functions
     void Awake()
@@ -143,6 +146,9 @@ using UnityEngine.UI;
     //Update is called every frame.
     void Update()
     {
+        if( Input.GetKeyDown(KeyCode.Escape) )
+            Pause();
+
         if( Input.GetKeyDown("space") && !controlDisabled )
             ToogleCamera();
 
@@ -169,6 +175,38 @@ using UnityEngine.UI;
             mainCamera.GetComponent<Camera>().orthographicSize = 7;
             mainCamera.transform.position = new Vector3(5.5f, 5.5f, -1f);
         }
+    }
+
+    public void Pause()
+    {
+        if (isPaused == true)
+        {
+            Time.timeScale = 1;
+            isPaused = false;
+            ToggleInterface();
+        }
+        else
+        {
+            Time.timeScale = 0;
+            isPaused = true;
+            ToggleInterface();
+        }
+    }
+
+    public void ToggleInterface()
+    {
+        if (isPaused == true)
+        {
+            menuInstance = Instantiate(pauseMenu) as GameObject;
+        }
+        else
+        {
+            if (menuInstance != null)
+            {
+                Destroy(menuInstance);
+            }
+        }
+  
     }
 
     public void AddEnemyToList(Enemy script)

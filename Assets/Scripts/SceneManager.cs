@@ -10,7 +10,7 @@ public class SceneManager : MonoBehaviour {
 
     public string game, menu;
 
-	void Start () {
+	public void Start () {
         // Singleton
         if (instance == null)
             instance = this;
