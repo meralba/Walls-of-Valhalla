@@ -10,11 +10,10 @@ public class Player : MovingObject {
     public float restartLevelDelay = 1f;
     public Text healthText;
 
-    public AudioClip moveSound1;
-    public AudioClip moveSound2;
+    public AudioClip [] moveSounds;
     public AudioClip eatSound1;
     public AudioClip eatSound2;
-    public AudioClip attackSound;
+    public AudioClip []attackSounds;
 
     public AudioClip gameOverSound;
 
@@ -96,8 +95,8 @@ public class Player : MovingObject {
         base.AttemptMove<T>(xDir, yDir);
 
         RaycastHit2D hit;
-        if(Move(xDir,yDir,out hit))
-            SoundManager.instance.RandomizeSfx(moveSound1, moveSound2);
+        if (Move(xDir, yDir, out hit))
+            SoundManager.instance.RandomizeSfx(moveSounds);
 
 
         checkIfGameOver();
@@ -123,7 +122,7 @@ public class Player : MovingObject {
             hitEnemy.TakeDamage(damage);
 
             StartCoroutine(PlayAnimation("playerChop"));
-            SoundManager.instance.RandomizeSfx(attackSound);
+            SoundManager.instance.RandomizeSfx(attackSounds);
         }
         
     }
