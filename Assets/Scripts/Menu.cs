@@ -18,7 +18,10 @@ public class Menu : MonoBehaviour {
         SceneManager.instance.LoadMenu();
         Time.timeScale = 1;
         GameManager.instance.isPaused = false;
-        
     }
 
+    public void OpenGitHubProject()
+    {
+        System.Diagnostics.Process.Start("https://github.com/MercAddons/Walls-of-Valhalla");
+    }
 }
