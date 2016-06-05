@@ -1,6 +1,6 @@
 fileFormatVersion: 2
 guid: 29cf84e9a1618fb498a1a2ea84da2faf
-timeCreated: 1462433849
+timeCreated: 1465120936
 licenseType: Free
 TextureImporter:
   fileIDToRecycleName:
@@ -152,21 +152,6 @@ TextureImporter:
       rect:
         serializedVersion: 2
         x: 192
-        y: 0
-        width: 32
-        height: 32
-      alignment: 0
-      pivot: {x: 0, y: 0}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      outline:
-      - - {x: -16, y: 16}
-        - {x: -16, y: -16}
-        - {x: 16, y: -16}
-        - {x: 16, y: 16}
-    - name: suelo_alien_7
-      rect:
-        serializedVersion: 2
-        x: 224
         y: 0
         width: 32
         height: 32

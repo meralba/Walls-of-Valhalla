@@ -1,17 +1,14 @@
 fileFormatVersion: 2
-guid: 0578a16f145f5d74386d099d6c6d74cc
-timeCreated: 1462039428
+guid: d43d689f215b69c4a975ea5c417406bc
+timeCreated: 1465120974
 licenseType: Free
 TextureImporter:
   fileIDToRecycleName:
-    21300000: suelo_alien 1_0
-    21300002: suelo_alien 1_1
-    21300004: suelo_alien 1_2
-    21300006: suelo_alien 1_3
-    21300008: suelo_alien 1_4
-    21300010: suelo_alien 1_5
-    21300012: suelo_alien 1_6
-    21300014: suelo_alien 1_7
+    21300000: suelo_monje_0
+    21300002: suelo_monje_1
+    21300004: suelo_monje_2
+    21300006: suelo_monje_3
+    21300008: suelo_monje_4
   serializedVersion: 2
   mipmaps:
     mipMapMode: 0
@@ -58,7 +55,7 @@ TextureImporter:
   buildTargetSettings: []
   spriteSheet:
     sprites:
-    - name: suelo_alien 1_0
+    - name: suelo_monje_0
       rect:
         serializedVersion: 2
         x: 0
@@ -73,7 +70,7 @@ TextureImporter:
         - {x: -16, y: -16}
         - {x: 16, y: -16}
         - {x: 16, y: 16}
-    - name: suelo_alien 1_1
+    - name: suelo_monje_1
       rect:
         serializedVersion: 2
         x: 32
@@ -88,7 +85,7 @@ TextureImporter:
         - {x: -16, y: -16}
         - {x: 16, y: -16}
         - {x: 16, y: 16}
-    - name: suelo_alien 1_2
+    - name: suelo_monje_2
       rect:
         serializedVersion: 2
         x: 64
@@ -103,7 +100,7 @@ TextureImporter:
         - {x: -16, y: -16}
         - {x: 16, y: -16}
         - {x: 16, y: 16}
-    - name: suelo_alien 1_3
+    - name: suelo_monje_3
       rect:
         serializedVersion: 2
         x: 96
@@ -118,55 +115,10 @@ TextureImporter:
         - {x: -16, y: -16}
         - {x: 16, y: -16}
         - {x: 16, y: 16}
-    - name: suelo_alien 1_4
+    - name: suelo_monje_4
       rect:
         serializedVersion: 2
         x: 128
-        y: 0
-        width: 32
-        height: 32
-      alignment: 0
-      pivot: {x: 0, y: 0}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      outline:
-      - - {x: -16, y: 16}
-        - {x: -16, y: -16}
-        - {x: 16, y: -16}
-        - {x: 16, y: 16}
-    - name: suelo_alien 1_5
-      rect:
-        serializedVersion: 2
-        x: 160
-        y: 0
-        width: 32
-        height: 32
-      alignment: 0
-      pivot: {x: 0, y: 0}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      outline:
-      - - {x: -16, y: 16}
-        - {x: -16, y: -16}
-        - {x: 16, y: -16}
-        - {x: 16, y: 16}
-    - name: suelo_alien 1_6
-      rect:
-        serializedVersion: 2
-        x: 192
-        y: 0
-        width: 32
-        height: 32
-      alignment: 0
-      pivot: {x: 0, y: 0}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      outline:
-      - - {x: -16, y: 16}
-        - {x: -16, y: -16}
-        - {x: 16, y: -16}
-        - {x: 16, y: 16}
-    - name: suelo_alien 1_7
-      rect:
-        serializedVersion: 2
-        x: 224
         y: 0
         width: 32
         height: 32
