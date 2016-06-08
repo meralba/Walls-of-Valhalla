@@ -41,8 +41,6 @@ using UnityEngine.UI;
     private bool enemiesMoving;
     private bool doingSetup;
 
-    public Camera Cam;
-    public GameObject mainCamera;
     public bool isPaused=false;
     public GameObject pauseMenu;
     private GameObject menuInstance;
@@ -66,8 +64,8 @@ using UnityEngine.UI;
 
 
         // This seems stupid, but with the first sentence the camera's reference is null.
-        mainCamera = (Instantiate(Cam, new Vector3(5.5f, 5.5f, -1f), Quaternion.identity) as GameObject);
-        mainCamera = GameObject.FindGameObjectWithTag("MainCamera");
+        //mainCamera = (Instantiate(Cam, new Vector3(5.5f, 5.5f, -1f), Quaternion.identity) as GameObject);
+        //mainCamera = GameObject.FindGameObjectWithTag("MainCamera");
 
 
         //Call the InitGame function to initialize the first level 
@@ -111,9 +109,9 @@ using UnityEngine.UI;
         GameObject.FindGameObjectWithTag("Player").GetComponent<Player>().setHealth(this.playerHealth);
 
         // Abstract this into the camera class
-        mainCamera.transform.SetParent(null);
-        mainCamera.GetComponent<Camera>().orthographicSize = 7;
-        mainCamera.transform.position = new Vector3(5.5f, 5.5f, -1f);
+        //mainCamera.transform.SetParent(null);
+        //mainCamera.GetComponent<Camera>().orthographicSize = 7;
+        //mainCamera.transform.position = new Vector3(5.5f, 5.5f, -1f);
     }
 
     private void HideLevelImage()
@@ -149,8 +147,6 @@ using UnityEngine.UI;
         if( Input.GetKeyDown(KeyCode.Escape) )
             Pause();
 
-        if( Input.GetKeyDown("space") && !controlDisabled )
-            ToogleCamera();
 
         if (playersTurn || enemiesMoving || doingSetup)
             return;
@@ -158,6 +154,8 @@ using UnityEngine.UI;
         StartCoroutine(MoveEnemies());
     }
 
+    // Eliminated for the sake of playability
+    /*
     public void ToogleCamera()
     {
         // This should be moved onto another script that handles cameras
@@ -175,7 +173,7 @@ using UnityEngine.UI;
             mainCamera.GetComponent<Camera>().orthographicSize = 7;
             mainCamera.transform.position = new Vector3(5.5f, 5.5f, -1f);
         }
-    }
+    }*/
 
     public void Pause()
     {

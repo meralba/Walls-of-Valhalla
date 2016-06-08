@@ -11,8 +11,7 @@ public class Player : MovingObject {
     public Text healthText;
 
     public AudioClip [] moveSounds;
-    public AudioClip eatSound1;
-    public AudioClip eatSound2;
+    public AudioClip[] healSounds;
     public AudioClip []attackSounds;
 
     public AudioClip gameOverSound;
@@ -132,14 +131,13 @@ public class Player : MovingObject {
         if (other.tag == "Exit")
         {
             GameManager.instance.controlDisabled = true;
-            GameManager.instance.mainCamera.transform.SetParent(null);
             Invoke("Restart", restartLevelDelay);
         }
         else if (other.tag == "Health")
         {
             this.health += this.pointsPerHealthPack;
             healthText.text = "+" + pointsPerHealthPack + " Health: " + health;
-            SoundManager.instance.RandomizeSfx(eatSound1, eatSound2);
+            SoundManager.instance.RandomizeSfx(healSounds);
             other.gameObject.SetActive(false);
         }
     }
